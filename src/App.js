@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-
+import { FadeLoader } from 'react-spinners';
 
 
 function App() {
@@ -12,8 +12,9 @@ function App() {
   const [open, setOpen] = useState(false);
   const [OpenNew, setOpenNew] = useState(false);
   const [progress, setProgress] = useState("");
+  const [isloading,setisLoading ] = useState(false);
 
- 
+
 
   function handleChange(e) {
     setFile(e.target.files[0]);
@@ -28,11 +29,11 @@ function App() {
     }
   }
 
-  
+
 
 
   const upload = async (file) => {
-
+  setisLoading(true);
     try {
       const formData = new FormData();
       formData.append('uploadFile', file);
@@ -40,25 +41,26 @@ function App() {
 
         // url: "https://vercelbacktest.vercel.app",
         // url: "http://localhost:8000",
-      url: "https://backgroundremover-backend.vercel.app",
+        url: "https://backgroundremover-backend.vercel.app",
         method: "post",
         data: formData,
         responseType: 'arraybuffer'
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data'
-      // },
+        //   headers: {
+        //     'Content-Type': 'multipart/form-data'
+        // },
 
       });
 
       if (res.data) {
 
         const blob = new Blob([res.data], { type: 'image/png' });
-          // Convert base64 string back to Blob
-          // const blob = await fetch(`data:image/png;base64,${res.data.data}`).then(res => res.blob());
-        
+        // Convert base64 string back to Blob
+        // const blob = await fetch(`data:image/png;base64,${res.data.data}`).then(res => res.blob());
+
         const imageUrl = URL.createObjectURL(blob);
 
         setImage(imageUrl);
+        setisLoading(false);
         setOpenNew(true);
         setOpen(false);
 
@@ -73,7 +75,7 @@ function App() {
   };
 
 
-  
+
   return (
     <div className="App"  >
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -82,11 +84,12 @@ function App() {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {(open || OpenNew) && <img src={Image} alt='fileAdd' style={{ height: "350px", borderStyle: 'solid', padding: '20px' }} />}
-        <button onClick={()=>upload(file)} style={{ borderRadius: "30", backgroundColor: 'blue', color: 'white', height: '40px', margin: '10px' }}>
+        <button onClick={() => upload(file)} style={{ borderRadius: "30", backgroundColor: 'blue', color: 'white', height: '40px', margin: '10px' }}>
           Remove Backgound
-          </button>
-       {progress}
-       
+        </button>
+        <FadeLoader loading={isloading}/>
+        {progress}
+
       </div>
     </div>
 
