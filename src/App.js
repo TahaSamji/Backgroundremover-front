@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import { FadeLoader } from 'react-spinners';
 
@@ -11,8 +11,7 @@ function App() {
   const [Image, setImage] = useState();
   const [open, setOpen] = useState(false);
   const [OpenNew, setOpenNew] = useState(false);
-  const [progress, setProgress] = useState("");
-  const [isloading,setisLoading ] = useState(false);
+  const [isloading, setisLoading] = useState(false);
 
 
 
@@ -22,38 +21,24 @@ function App() {
 
     setOpen(true);
   }
-  let config = {
-    debug: true,
-    progress: (key, current, total) => {
-      setProgress(`Downloading ${key}: ${current} of ${total}`);
-    }
-  }
-
-
 
 
   const upload = async (file) => {
-  setisLoading(true);
+    setisLoading(true);
     try {
       const formData = new FormData();
       formData.append('uploadFile', file);
       const res = await axios({
 
-        // url: "https://vercelbacktest.vercel.app",
-        // url: "http://localhost:8000",
         url: "https://backgroundremover-backend.vercel.app",
         method: "post",
         data: formData
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        // },
 
       });
 
       if (res.data) {
 
-        // const blob = new Blob([res.data], { type: 'image/png' });
-        // Convert base64 string back to Blob
+
         const blob = await fetch(`data:image/png;base64,${res.data.data}`).then(res => res.blob());
 
         const imageUrl = URL.createObjectURL(blob);
@@ -86,8 +71,8 @@ function App() {
         <button onClick={() => upload(file)} style={{ borderRadius: "30", backgroundColor: 'blue', color: 'white', height: '40px', margin: '10px' }}>
           Remove Backgound
         </button>
-        <FadeLoader loading={isloading}/>
-        {progress}
+        <FadeLoader loading={isloading} />
+
 
       </div>
     </div>
