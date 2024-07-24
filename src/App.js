@@ -14,12 +14,23 @@ function App() {
   const [isloading, setisLoading] = useState(false);
 
 
-
   function handleChange(e) {
     setFile(e.target.files[0]);
     setImage(URL.createObjectURL(e.target.files[0]));
-
     setOpen(true);
+  }
+
+  function downloadImage() {
+    if (!Image) {
+      return;
+    }
+
+    const a = document.createElement('a');
+    a.href = Image;
+    a.download = 'NewImage.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
 
@@ -72,6 +83,7 @@ function App() {
           Remove Backgound
         </button>
         <FadeLoader loading={isloading} />
+        {OpenNew && <button onClick={downloadImage}>Download Image</button>}
 
 
       </div>
