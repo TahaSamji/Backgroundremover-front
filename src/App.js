@@ -43,8 +43,7 @@ function App() {
         // url: "http://localhost:8000",
         url: "https://backgroundremover-backend.vercel.app",
         method: "post",
-        data: formData,
-        responseType: 'arraybuffer'
+        data: formData
         //   headers: {
         //     'Content-Type': 'multipart/form-data'
         // },
@@ -53,9 +52,9 @@ function App() {
 
       if (res.data) {
 
-        const blob = new Blob([res.data], { type: 'image/png' });
+        // const blob = new Blob([res.data], { type: 'image/png' });
         // Convert base64 string back to Blob
-        // const blob = await fetch(`data:image/png;base64,${res.data.data}`).then(res => res.blob());
+        const blob = await fetch(`data:image/png;base64,${res.data.data}`).then(res => res.blob());
 
         const imageUrl = URL.createObjectURL(blob);
 
